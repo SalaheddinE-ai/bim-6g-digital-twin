@@ -1,0 +1,35 @@
+[project]
+name = "bim-6g-digital-twin"
+version = "0.1.0"
+description = "BIM-6G electromagnetic digital twin: IFC + Sionna RT + LLM assistant"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "pydantic>=2.8",
+  "pydantic-settings>=2.4",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Exact pins for the simulation stack (verified together, see docs/dependency_report.md)
+bim = ["ifcopenshell==0.9.0.post1"]
+rt = ["sionna-rt==2.2.0"]
+dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+markers = [
+  "integration: needs real external components (Sionna RT, ASGI app)",
+  "sionna: runs a real Sionna RT simulation",
+  "gpu: needs a working CUDA + OptiX backend",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

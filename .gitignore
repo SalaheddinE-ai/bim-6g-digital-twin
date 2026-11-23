@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+storage/*
+!storage/.gitkeep
+!storage/logs/
+storage/logs/*
+!storage/logs/.gitkeep
+tests/fixtures/real_ifc/

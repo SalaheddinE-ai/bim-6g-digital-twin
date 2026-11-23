@@ -1,0 +1,14 @@
+app:
+  name: bim-6g-digital-twin
+  env: dev
+
+logging:
+  level: INFO
+  file: storage/logs/app.log
+
+radio:
+  backend: auto          # auto | cuda | llvm
+  probe_timeout_s: 120
+
+paths:
+  storage_dir: storage
