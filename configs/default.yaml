@@ -12,3 +12,13 @@ radio:
 
 paths:
   storage_dir: storage
+
+geometry:
+  recenter: auto                 # none | auto | bbox_min  (offset is stored, world = mesh + offset)
+  recenter_threshold_m: 10000    # `auto` recentres only when coordinates exceed this
+  weld_tolerance_m: 1.0e-6
+  min_face_area_m2: 1.0e-10
+  duplicate_policy: exclude      # exclude | keep (coincident duplicate meshes in the radio scene)
+  placement_tolerance_m: 1.0     # BIM placement vs mesh bbox cross-check
+  num_threads: 4
+  materials_file: configs/materials.yaml

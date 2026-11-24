@@ -1,0 +1,65 @@
+# IFC material -> radio-propagation material class mapping (M02).
+#
+# STATUS: every assignment made from this file is an ASSUMPTION, not a measurement.
+# - Name rules guess a material class from IFC material NAMES (e.g. "Plasterboard").
+# - Category fallbacks guess from the IFC class (e.g. every IfcWall -> concrete).
+# Real electromagnetic parameters are NOT stored here: `em_materials` only references ITU-R P.2040
+# material types as tabulated in Sionna RT 2.2.0 (sionna/rt/radio_materials/itu.py), together with
+# their documented validity ranges. Overrides (by GlobalId) are the way to record confirmed facts.
+version: 1
+composite_policy: priority   # elements with several matching materials take the lowest priority number
+
+em_materials:
+  concrete:
+    itu_type: concrete
+    valid_frequency_ranges_ghz: [[1.0, 100.0], [110.0, 330.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  brick:
+    itu_type: brick
+    valid_frequency_ranges_ghz: [[1.0, 40.0], [110.0, 330.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  plasterboard:
+    itu_type: plasterboard
+    valid_frequency_ranges_ghz: [[1.0, 100.0], [110.0, 330.0], [100.0, 400.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  wood:
+    itu_type: wood
+    valid_frequency_ranges_ghz: [[0.001, 100.0], [110.0, 330.0], [100.0, 400.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  glass:
+    itu_type: glass
+    valid_frequency_ranges_ghz: [[0.1, 100.0], [220.0, 450.0], [100.0, 400.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  metal:
+    itu_type: metal
+    valid_frequency_ranges_ghz: [[1.0, 100.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  ceiling_board:
+    itu_type: ceiling_board
+    valid_frequency_ranges_ghz: [[1.0, 100.0], [220.0, 450.0], [100.0, 400.0]]
+    source: "ITU-R P.2040 Table 3 (via Sionna RT 2.2.0 ITU_MATERIALS_PROPERTIES)"
+  # Deliberately NOT mapped: ITU `floorboard` is only valid from 50 GHz, so it must not be used at 5 GHz.
+
+# Lower priority number wins when an element carries several matching materials.
+# Rationale (assumption): bulk obstructing layers dominate attenuation; thin studs/frames/finishes
+# do not turn a partition into a metal wall. Layer thicknesses are NOT available yet (M01 limitation 6).
+rules:
+  - {id: concrete,     priority: 10, em_material: concrete,     pattern: '(?i)concrete|cast[ -]in[ -]place|cast in situ'}
+  - {id: brick,        priority: 20, em_material: brick,        pattern: '(?i)brick|masonry|\bblock\b'}
+  - {id: plasterboard, priority: 30, em_material: plasterboard, pattern: '(?i)plasterboard|gypsum|drywall'}
+  - {id: wood,         priority: 40, em_material: wood,         pattern: '(?i)\bwood\b|timber|plywood|flooring|door\s*-\s*panel'}
+  - {id: glass,        priority: 50, em_material: glass,        pattern: '(?i)\bglass\b|glazing'}
+  - {id: metal,        priority: 60, em_material: metal,        pattern: '(?i)\bmetal\b|steel|alumin(i)?um'}
+  - {id: ceiling,      priority: 70, em_material: ceiling_board, pattern: '(?i)ceiling'}
+
+# Used only when no rule matches any material name of the element (or it has no materials).
+category_fallbacks:
+  wall: concrete
+  slab: concrete
+  column: concrete
+  door: wood
+  window: glass
+  curtain_wall: glass
+
+# Confirmed facts: GlobalId -> em_material. Empty by default.
+overrides: {}

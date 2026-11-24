@@ -9,8 +9,8 @@ PostgreSQL later) + filesystem storage.
 | Module | Scope | Status |
 |---|---|---|
 | M00 | Foundation: config, logging, API skeleton, env check, tests | see `testing_strategy.md` |
-| M01 | IFC ingestion (IfcOpenShell) | NOT RUN |
-| M02 | Geometry processing | NOT RUN |
+| M01 | IFC ingestion (IfcOpenShell) | tests PASS (author sandbox) - rerun on user machine pending |
+| M02 | Geometry processing | tests PASS (author sandbox) - rerun on user machine pending |
 | M03 | BIM spatial graph | NOT RUN |
 | M04 | Radio scene builder (IFC meshes -> Mitsuba scene) | NOT RUN |
 | M05 | Radio simulation (Sionna RT) | NOT RUN |

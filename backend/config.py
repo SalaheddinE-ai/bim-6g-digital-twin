@@ -43,6 +43,19 @@ class PathSettings(_Section):
     storage_dir: Path = Path("storage")
 
 
+class GeometrySettings(_Section):
+    """M02 geometry processing parameters."""
+
+    recenter: Literal["none", "auto", "bbox_min"] = "auto"
+    recenter_threshold_m: float = Field(default=10_000.0, gt=0)  # `auto` shifts beyond this
+    weld_tolerance_m: float = Field(default=1e-6, gt=0)
+    min_face_area_m2: float = Field(default=1e-10, ge=0)
+    duplicate_policy: Literal["exclude", "keep"] = "exclude"
+    placement_tolerance_m: float = Field(default=1.0, gt=0)
+    num_threads: int = Field(default=4, ge=1)
+    materials_file: Path = Path("configs/materials.yaml")
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_prefix="BIM6G_", env_nested_delimiter="__", extra="ignore"
@@ -52,6 +65,7 @@ class Settings(BaseSettings):
     logging: LoggingSettings = LoggingSettings()
     radio: RadioSettings = RadioSettings()
     paths: PathSettings = PathSettings()
+    geometry: GeometrySettings = GeometrySettings()
 
     @classmethod
     def settings_customise_sources(
